@@ -47,7 +47,7 @@ class AskQuestion(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/html'
         self.response.write("<html><body><form action='/add-q' method='post'>\n<br />Question for: <input type=text name='person' />\n" + \
                             "<br />Please tag this question: <input type=text name='hashtag' />\n" + \
-                            "<br />Your question (500 char max): <textarea rows=6 cols=40 maxlength=500 name='question'></textarea>1\n" + \
+                            "<br />Your question (500 char max): <textarea rows=6 cols=40 maxlength=500 name='question'></textarea>\n" + \
                             "<br /><input type='submit' /></form></body></html>")
         
 class AddQ(webapp2.RequestHandler):
