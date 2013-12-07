@@ -55,12 +55,10 @@ class AddQ(webapp2.RequestHandler):
     def post(self):
         pinfo = db.GqlQuery("SELECT * FROM Persons where name=:1", self.request.get('person').lower()).run()
         exists = True
-        print dir(pinfo)
         try:
             pinfo = pinfo.next()
         except:
             exists = False
-        print exists
         hashtag = Hashtag(name=self.request.get('hashtag').lower().replace("#",""), key_name=self.request.get('hashtag').lower().replace("#",""))
         hashtag.put()
         if not exists:
@@ -93,7 +91,6 @@ class GetHashtag(webapp2.RequestHandler):
             questions = []
             for q in info.questions:
                 questions.append(q.question)
-                print q.question
         to_send['result'] = results
         to_send['questions'] = questions
         json_to_send = str(json.dumps(to_send))
