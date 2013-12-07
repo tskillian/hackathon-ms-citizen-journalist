@@ -4,6 +4,8 @@ import cgi
 import os
 from google.appengine.ext import db
 import json
+import tweepy
+from private import consumer_key, consumer_secret
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -22,9 +24,10 @@ class Questions(db.Model):
 class MainPage(webapp2.RequestHandler):
     
     def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.write('Hello, webapp World!')
-        
+        template = JINJA_ENVIRONMENT.get_template('distribution/index.html')
+        self.response.write(template.render())
+
+
 class AskQuestion(webapp2.RequestHandler):
     
     def get(self):
@@ -54,7 +57,28 @@ class GetPerson(webapp2.RequestHandler):
         to_send['questions'] = questions
         self.response.write(json.dumps(to_send))
         
+class Callback(webapp2.RequestHandler):
+    
+    def get(self):
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        print self.request.get('oauth_verifier')
+        auth.get_access_token(self.request.get('oauth_verifier'))
+
+    
+class Login(webapp2.RequestHandler):
+    
+    def get(self):
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret, 'https://citizen-journalist.appspot.com/callback')
+        
+#        self.response.headers.add_header('Set-Cookie', 'OAUTH_TOKEN = %s' % (auth['oauth_token']))
+#        self.response.headers.add_header('Set-Cookie', 'OAUTH_TOKEN_SECRET = %s' % (auth['oauth_token_secret']))
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % (auth.get_authorization_url()))
+
+        
 app = webapp2.WSGIApplication([
+                               ('/login', Login),
+                               ('/callback', Callback),
                                ('/get-person', GetPerson),
                                ('/ask-question', AskQuestion),
                                ('/add-q', AddQ),
