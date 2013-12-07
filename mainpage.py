@@ -25,8 +25,16 @@ class Questions(db.Model):
 class MainPage(webapp2.RequestHandler):
     
     def get(self):
+        
+        info=db.GqlQuery("SELECT * FROM Hashtag").run()
+        template_values = {}
+        to_append = []
+        for i in info:
+            to_append.append(i.name)
+        template_values['hashtags'] = to_append
+        
         template = JINJA_ENVIRONMENT.get_template('index.html')
-        self.response.write(template.render())
+        self.response.write(template.render(template_values))
 
 
 class AskQuestion(webapp2.RequestHandler):
