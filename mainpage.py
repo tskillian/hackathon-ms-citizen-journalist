@@ -25,6 +25,9 @@ class Hashtag(db.Model):
 class Questions(db.Model):
     contact = db.ReferenceProperty(Hashtag, collection_name="questions")
     question = db.StringProperty()
+    
+#class Answers(db.Model):
+    
 
 class MainPage(webapp2.RequestHandler):
     
@@ -73,7 +76,8 @@ class AddQ(webapp2.RequestHandler):
                 person.hashtags = p_hashtags
                 person.put()
         Questions(contact=hashtag, question=self.request.get('question')).put()
-        self.response.write('Success. Maybe.')
+        #self.response.write('Success. Maybe.')
+        self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % ("/ask-question"))
         
 class GetHashtag(webapp2.RequestHandler):
     """Sends json encoded information about a person"""
