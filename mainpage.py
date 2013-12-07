@@ -6,7 +6,7 @@ from google.appengine.ext import db
 import json
 import tweepy
 from private import consumer_key, consumer_secret
-from urlparse import urlparse 
+import urlparse 
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -91,13 +91,11 @@ class Login(webapp2.RequestHandler):
     def get(self):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret, 'https://citizen-journalist.appspot.com/callback')
         
-#        self.response.headers.add_header('Set-Cookie', 'OAUTH_TOKEN = %s' % (auth['oauth_token']))
-#        self.response.headers.add_header('Set-Cookie', 'OAUTH_TOKEN_SECRET = %s' % (auth['oauth_token_secret']))
         self.response.headers['Content-Type'] = 'text/html'
         auth_url = auth.get_authorization_url()
-        print auth.request_token
-        print urlparse("http://foo.bar?" + str(auth.request_token))
-        self.response.headers.add_header('Set-Cookie', 'REQUEST_TOKEN = %s' % auth.request_token)
+        parsed_token = urlparse.parse_qs(str(auth.request_token))
+        self.response.headers.add_header('Set-Cookie', 'oauth_token_secret = %s' % parsed_token['oauth_token_secret'])
+        self.response.headers.add_header('Set-Cookie', 'oauth_token = %s' % parsed_token['oauth_token'])
         self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % (auth_url))
 
 class Test(webapp2.RequestHandler):
