@@ -6,6 +6,7 @@ from google.appengine.ext import db
 import json
 import tweepy
 from private import consumer_key, consumer_secret
+from urlparse import urlparse 
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -70,9 +71,11 @@ class GetHashtag(webapp2.RequestHandler):
 class Callback(webapp2.RequestHandler):
     
     def get(self):
-        auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+        auth = tweepy.OAuthHandler(consumer_key, consumer_secret, 'https://citizen-journalist.appspot.com/callback')
+        auth.set_request_token(consumer_key, consumer_secret)
         print self.request.get('oauth_verifier')
-        auth.get_access_token(self.request.get('oauth_verifier'))
+        print self.request.cookies.get('REQUEST_TOKEN')
+       # print auth.get_access_token(self.request.get('oauth_verifier'))
 
     
 class Login(webapp2.RequestHandler):
@@ -83,10 +86,28 @@ class Login(webapp2.RequestHandler):
 #        self.response.headers.add_header('Set-Cookie', 'OAUTH_TOKEN = %s' % (auth['oauth_token']))
 #        self.response.headers.add_header('Set-Cookie', 'OAUTH_TOKEN_SECRET = %s' % (auth['oauth_token_secret']))
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % (auth.get_authorization_url()))
+        auth_url = auth.get_authorization_url()
+        print auth.request_token
+        print urlparse("http://foo.bar?" + str(auth.request_token))
+        self.response.headers.add_header('Set-Cookie', 'REQUEST_TOKEN = %s' % auth.request_token)
+        self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % (auth_url))
 
+class Test(webapp2.RequestHandler):
+    
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.headers.add_header('Set-Cookie', 'email3=foo@bar.baz')
+        self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % ("/test2"))
+        
+       # self.response.out.write(self.request.cookies.get('email')) 
+        
+class Test2(webapp2.RequestHandler):
+    def get(self):
+        self.response.out.write(self.request.cookies.get('email3'))
         
 app = webapp2.WSGIApplication([
+                               ('/test2', Test2),
+                               ('/test', Test),
                                ('/login', Login),
                                ('/callback', Callback),
                                ('/get-hashtag', GetHashtag),
