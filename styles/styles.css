@@ -1,0 +1,23 @@
+#ask_button #talk_button {
+	margin-top: 40px;
+	margin-right: 40px;
+}
+
+img {
+	margin-top: 18px;
+}
+
+#submit_question {
+	display: block;
+}
+
+form {
+	margin-top: 20px;
+}
+
+#video_iframe {
+	display: block;
+	width: 100%;
+	height: 490px;
+	border: none;
+}
