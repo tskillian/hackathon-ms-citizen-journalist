@@ -7,7 +7,7 @@ module.exports = function(grunt) {
         connect: {
             all: {
                 options: {
-                    base: ['.'],
+                    base: ['bower_components', '.'],
                     hostname: '*',
                     livereload: true,
                     port: 9000
