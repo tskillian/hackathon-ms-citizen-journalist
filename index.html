@@ -10,8 +10,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <link rel="stylesheet" href="styles/a81415a5.main.css"/>
-        <script src="scripts/vendor/d7100892.modernizr.js"></script>
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/styles.css">
+        <!-- endbuild -->
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
     </head>
     <body>
         <!--[if lt IE 10]>
@@ -21,9 +26,9 @@
 
         <div class="col-lg-12">
             <div class="header">
-                <h1 class="text-center">
+                <h1 class ="text-center">
                     Citizen Journalist
-                    <a href="#"><img src="/images/7d9beb27.sign-in-with-twitter-gray.png" alt="twitter login" class="img-rounded pull-right"></a>
+                    <a href="#"><img src="/images/sign-in-with-twitter-gray.png" alt="twitter login" class="img-rounded pull-right"></a>
                 </h1>
                 
             </div>
@@ -33,7 +38,7 @@
                 <div class="col-lg-8" id="video">
 
                     <iframe src="http://10.104.245.220:3000/viewer" id="video_iframe"></iframe>
-                <button type="button" id="talk_button" class="btn btn-info">I will be talking to...</button>
+                <button type="button" id="talk_button"class="btn btn-info">I will be talking to...</button>
                 <button type="button" id="ask_button" class="btn btn-primary">Ask a question</button>
                 <div id="text_area_div" class="text-center"></div>
                 </div>
@@ -54,7 +59,11 @@
         </div>
 
 
-        <script src="scripts/dbd26eaf.vendor.js"></script>
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="bower_components/jquery/jquery.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
 
         <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
         <script>
@@ -66,8 +75,23 @@
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
 
-        <script src="scripts/8a1de408.main.js"></script>
+        <!-- build:js scripts/main.js -->
+        <script src="scripts/main.js"></script>
+        <!-- endbuild -->
 
-        <script src="scripts/20bdd8fe.plugins.js"></script>
-</div></body>
+        <!-- build:js scripts/plugins.js -->
+        <script src="bower_components/sass-bootstrap/js/affix.js"></script>
+        <script src="bower_components/sass-bootstrap/js/alert.js"></script>
+        <script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
+        <script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
+        <script src="bower_components/sass-bootstrap/js/modal.js"></script>
+        <script src="bower_components/sass-bootstrap/js/transition.js"></script>
+        <script src="bower_components/sass-bootstrap/js/button.js"></script>
+        <script src="bower_components/sass-bootstrap/js/popover.js"></script>
+        <script src="bower_components/sass-bootstrap/js/carousel.js"></script>
+        <script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
+        <script src="bower_components/sass-bootstrap/js/collapse.js"></script>
+        <script src="bower_components/sass-bootstrap/js/tab.js"></script>
+        <!-- endbuild -->
+</body>
 </html>
