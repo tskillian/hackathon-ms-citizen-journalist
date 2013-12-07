@@ -24,7 +24,7 @@ class Questions(db.Model):
 class MainPage(webapp2.RequestHandler):
     
     def get(self):
-        template = JINJA_ENVIRONMENT.get_template('distribution/index.html')
+        template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render())
 
 
