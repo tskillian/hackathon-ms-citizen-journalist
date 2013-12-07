@@ -14,6 +14,10 @@ JINJA_ENVIRONMENT = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+class Persons(db.Model):
+    name=db.StringProperty()
+    hashtags=db.ListProperty(db.Key)
+
 class Hashtag(db.Model):
     name=db.StringProperty()
     Location=db.StringProperty()
@@ -41,22 +45,42 @@ class AskQuestion(webapp2.RequestHandler):
     
     def get(self):
         self.response.headers['Content-Type'] = 'text/html'
-        self.response.write("<html><body><form action='/add-q' method='post'>\n<br />Question for: <input type=text name='hashtag' />\n" + \
+        self.response.write("<html><body><form action='/add-q' method='post'>\n<br />Question for: <input type=text name='person' />\n" + \
+                            "<br />Please tag this question: <input type=text name='hashtag' />\n" + \
                             "<br />Your question (500 char max): <textarea rows=6 cols=40 maxlength=500 name='question'></textarea>1\n" + \
                             "<br /><input type='submit' /></form></body></html>")
         
 class AddQ(webapp2.RequestHandler):
     
     def post(self):
+        pinfo = db.GqlQuery("SELECT * FROM Persons where name=:1", self.request.get('person').lower()).run()
+        exists = True
+        print dir(pinfo)
+        try:
+            pinfo = pinfo.next()
+        except:
+            exists = False
+        print exists
         hashtag = Hashtag(name=self.request.get('hashtag').lower().replace("#",""), key_name=self.request.get('hashtag').lower().replace("#",""))
         hashtag.put()
+        if not exists:
+            person = Persons(name=self.request.get('person').lower(), key_name=self.request.get('person').lower())
+            person.hashtags = [hashtag.key()]
+            person.put()
+        if exists:
+            p_hashtags = pinfo.hashtags
+            if hashtag.key() not in p_hashtags:
+                p_hashtags.append(hashtag.key())
+                person = Persons(name=self.request.get('person').lower(), key_name=self.request.get('person').lower())
+                person.hashtags = p_hashtags
+                person.put()
         Questions(contact=hashtag, question=self.request.get('question')).put()
         self.response.write('Success. Maybe.')
         
 class GetHashtag(webapp2.RequestHandler):
     """Sends json encoded information about a person"""
     def get(self):
-        info = db.GqlQuery("SELECT * FROM Hashtag WHERE name=:1", self.request.get('hashtag'))
+        info = db.GqlQuery("SELECT * FROM Hashtag WHERE name=:1", self.request.get('hashtag').lower().replace("#",""))
         results = True
         try:
             info = info.run().next()
@@ -72,6 +96,28 @@ class GetHashtag(webapp2.RequestHandler):
                 print q.question
         to_send['result'] = results
         to_send['questions'] = questions
+        json_to_send = str(json.dumps(to_send))
+        string_to_send = self.request.get('callback') + "(" + json_to_send + ")"
+        self.response.write(string_to_send)
+        
+class GetPerson(webapp2.RequestHandler):
+    
+    def get(self):
+        info = db.GqlQuery("SELECT * FROM Persons WHERE name=:1", self.request.get('person').lower())
+        results = True
+        try:
+            info = info.run().next()
+        except:
+            issues=[]
+            results = False
+        to_send = {}
+        if results:
+            to_send['name'] = info.name
+            issues = []
+            for h in info.hashtags:
+                issues.append(db.get(h).name)
+        to_send['results']=results
+        to_send['hashtags']=issues
         json_to_send = str(json.dumps(to_send))
         string_to_send = self.request.get('callback') + "(" + json_to_send + ")"
         self.response.write(string_to_send)
@@ -106,7 +152,7 @@ class Test(webapp2.RequestHandler):
         self.response.write("<html><body><meta HTTP-EQUIV='REFRESH' content='0; url=%s'></body></html>" % ("/test2"))
         
        # self.response.out.write(self.request.cookies.get('email')) 
-        
+ 
 class Test2(webapp2.RequestHandler):
     def get(self):
         self.response.out.write(self.request.cookies.get('email3'))
@@ -117,6 +163,7 @@ app = webapp2.WSGIApplication([
                                ('/login', Login),
                                ('/callback', Callback),
                                ('/get-hashtag', GetHashtag),
+                               ('/get-person', GetPerson),
                                ('/ask-question', AskQuestion),
                                ('/add-q', AddQ),
                                ('/index', MainPage),
