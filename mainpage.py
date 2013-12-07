@@ -23,7 +23,12 @@ class Hashtag(db.Model):
     
 class Questions(db.Model):
     contact = db.ReferenceProperty(Hashtag, collection_name="questions")
-    question = db.StringProperty()    
+    question = db.StringProperty()
+    
+class Answers(db.Model):
+    location = db.LinkProperty()
+    hashtags = db.ListProperty(db.Key)
+    #TODO: DO THIS 
 
 class MainPage(webapp2.RequestHandler):
     
