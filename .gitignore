@@ -54,3 +54,5 @@ docs/_build/
 # mac stuff:
 .DS_Store
 
+# Private key file
+private.py
