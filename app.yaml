@@ -1,8 +1,16 @@
 application: citizen-journalist
 version: 1
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: true
 
 handlers:
 - url: /.*
-  script: helloworld.py
+  script: mainpage.app
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+  
