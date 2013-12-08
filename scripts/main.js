@@ -13,9 +13,10 @@ $(document).ready(function() {
 	$('#submit_button').click(function(e) {
 		e.preventDefault();
 		var text = $('#question_text').val();
+		$('#question_text').val('');
 		var hashTags = text.match(/#.+\s*/)[0];
 		var question = text.replace(hashTags, '');
-		
+
 		return false;
 	});
 
