@@ -1,4 +1,3 @@
-Microsoft Open Government Hackathon
-#####
+#Microsoft Open Government Hackathon
 
 Citizen Journalist
