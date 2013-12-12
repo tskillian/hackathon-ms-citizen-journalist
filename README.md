@@ -1,1 +1,4 @@
-# This is my README
+Microsoft Open Government Hackathon
+#####
+
+Citizen Journalist
